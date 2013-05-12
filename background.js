@@ -13,12 +13,12 @@ function checkInsights(timecheck) {
 			if (typeof data.error === 'undefined') {
 				for (var i = 0; i < data.length; i++) {
 					var insight = data[i];
-					var notification = window.webkitNotifications.createNotification("icon.png", insight.prefix, insight.text);
+					var htmlstripper = document.createElement("div");
+					htmlstripper.innerHTML = insight.text;
+					var title = insight.prefix.replace(":","");
+					var notification = window.webkitNotifications.createNotification("icon.png", title, htmlstripper.innerText);
 					notification.show();
 				}
-				date = new Date(data[0].time_generated);
-				timecheck = date.getTime();
-				console.log("New timecheck " + timecheck);
 			} else {
 				console.log('Error: ' + data.error.message);
 			}
@@ -26,7 +26,7 @@ function checkInsights(timecheck) {
 	}
 	xhr.open("GET", api_url, true);
 	xhr.send();
-	return timecheck;
+	return Math.round(+new Date() / 1000);
 }
 
 // Test for notification support.
