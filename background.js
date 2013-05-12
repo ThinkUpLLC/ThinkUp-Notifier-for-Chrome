@@ -1,7 +1,8 @@
 function checkInsights(timecheck) {
 	console.log("Checking insights " + timecheck);
 
-	var api_url = localStorage["install_url"] + "api/v1/insight.php" + "?since=" + timecheck + "&api_key=" + localStorage["install_api_key"];
+	var api_url = localStorage["install_url"] + "api/v1/insight.php" + "?since=" + timecheck 
+	+ "&as=" + localStorage["install_api_key"] + '&un=' + encodeURI(localStorage["email_address"]);
 	//var api_url = localStorage["install_url"] + "test.json";
 	console.log(api_url);
 

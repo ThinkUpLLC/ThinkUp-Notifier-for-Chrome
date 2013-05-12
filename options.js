@@ -6,6 +6,9 @@ function save_options() {
 	var install_api_key = document.getElementById("install_api_key").value;
 	localStorage["install_api_key"] = install_api_key;
 
+	var email_address = document.getElementById("email_address").value;
+	localStorage["email_address"] = email_address;
+
 	// Update status to let user know options were saved.
 	var status = document.getElementById("status");
 	status.innerHTML = "Options saved.";
@@ -28,6 +31,12 @@ function restore_options() {
 		return;
 	}
 	document.getElementById("install_api_key").value = install_api_key;
+
+	var email_address = localStorage["email_address"];
+	if (!email_address) {
+		return;
+	}
+	document.getElementById("email_address").value = email_address;
 }
 
 document.addEventListener('DOMContentLoaded', restore_options);
