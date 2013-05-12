@@ -1,0 +1,17 @@
+{
+	"name": "ThinkUp Notifier",
+	"version": "1.0",
+	"manifest_version": 2,
+	"description": "See ThinkUp's latest insights as they happen.",
+	"options_page": "options.html",
+	"background": {
+		"scripts": ["background.js"]
+	},
+
+	"browser_action": {
+		"default_icon": "icon.png",
+		"default_title": "ThinkUp Notifier",
+		"default_popup": "popup.html"
+	},
+	"permissions": ["http://*/", "tabs", "notifications"]
+}

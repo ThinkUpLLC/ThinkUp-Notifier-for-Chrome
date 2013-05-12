@@ -1,4 +1,4 @@
-ThinkUp-Notifier-for-Chrome
-===========================
+ThinkUp Notifier Chrome Extension
+=================================
 
-ThinkUp Notifier Chrome extension alerts users to new ThinkUp insights as they happen.
+Alerts users to new ThinkUp (http://thinkup.com) insights as they happen.
