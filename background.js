@@ -1,10 +1,8 @@
 function checkInsights(timecheck) {
-	console.log("Checking insights " + timecheck);
-
 	var api_url = localStorage["install_url"] + "api/v1/insight.php" + "?since=" + timecheck 
 	+ "&as=" + localStorage["install_api_key"] + '&un=' + encodeURI(localStorage["email_address"]);
 	//var api_url = localStorage["install_url"] + "test.json";
-	console.log(api_url);
+	console.log(Date() + " checking for new insights " + api_url);
 
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function() {
@@ -35,14 +33,15 @@ if (window.webkitNotifications) {
 	// While activated, show notifications at the display frequency.
 	timecheck = checkInsights(timecheck);
 
-	var interval = 1; // The display interval, in minutes.
-	var frequency = interval * 60;
+	var interval = 5; // The polling interval, in minutes.
+	var minutes_passed = 0;
 	setInterval(function() {
-		interval++;
-		console.log("setInterval called " + interval + " at frequency " + frequency);
-		if (frequency <= interval) {
+		minutes_passed++;
+		if (minutes_passed >= interval) {
 			timecheck = checkInsights(timecheck);
-			interval = 0;
+			minutes_passed = 0;
+		} else {
+			console.log(Date() + ' ' + minutes_passed + ' minute(s) passed since last check, waiting to reach ' + interval);
 		}
-	}, 10000);
+	}, 60000);
 }
