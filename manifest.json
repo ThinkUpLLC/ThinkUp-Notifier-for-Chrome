@@ -13,5 +13,5 @@
 		"default_title": "ThinkUp Notifier",
 		"default_popup": "popup.html"
 	},
-	"permissions": ["http://*/", "tabs", "notifications"]
+	"permissions": ["http://*/", "tabs", "notifications", "storage"]
 }
