@@ -1,42 +1,47 @@
-// Saves options to localStorage.
-function save_options() {
-	var install_url = document.getElementById("install_url").value;
-	localStorage["install_url"] = install_url;
+// Saves options to sync storage.
+function save_options(e) {
+	e.preventDefault();
 
-	var install_api_key = document.getElementById("install_api_key").value;
-	localStorage["install_api_key"] = install_api_key;
+	var ThinkUpSettings = {}
 
-	var email_address = document.getElementById("email_address").value;
-	localStorage["email_address"] = email_address;
+	ThinkUpSettings.install_url = document.getElementById("install_url").value.slice(-1) == '/' ?
+	document.getElementById("install_url").value : document.getElementById("install_url").value+'/';
+	ThinkUpSettings.install_api_key = document.getElementById("install_api_key").value;
+	ThinkUpSettings.email_address = document.getElementById("email_address").value;
 
-	// Update status to let user know options were saved.
-	var status = document.getElementById("status");
-	status.innerHTML = "Options saved.";
-	setTimeout(function() {
-		status.innerHTML = "";
-	}, 5000);
+	if (!ThinkUpSettings.install_url || !ThinkUpSettings.install_api_key || !ThinkUpSettings.email_address) {
+		var status = document.getElementById("status");
+		status.innerHTML = '<div class="alert alert-error">All the fields are required!<br/>Options not saved.</div>';
+		return;
+	}
+
+	chrome.storage.sync.set(
+		ThinkUpSettings,
+		function() {
+			// Update status to let user know options were saved.
+			var status = document.getElementById("status");
+			status.innerHTML = '<div class="alert alert-success">Options saved.</div>';
+			setTimeout(function() {
+				status.innerHTML = "";
+			}, 5000);
+		}
+	);
 }
 
 // Restores option fields to saved values from localStorage.
 function restore_options() {
-	// Initialize the option controls.
-	var install_url = localStorage["install_url"];
-	if (!install_url) {
-		return;
-	}
-	document.getElementById("install_url").value = install_url;
+	chrome.storage.sync.get(
+		null,
+		function(ThinkUpSettings) {
+			if (!ThinkUpSettings.install_url || !ThinkUpSettings.install_api_key || !ThinkUpSettings.email_address) {
+				return;
+			}
 
-	var install_api_key = localStorage["install_api_key"];
-	if (!install_api_key) {
-		return;
-	}
-	document.getElementById("install_api_key").value = install_api_key;
-
-	var email_address = localStorage["email_address"];
-	if (!email_address) {
-		return;
-	}
-	document.getElementById("email_address").value = email_address;
+			document.getElementById("install_url").value = ThinkUpSettings.install_url;
+			document.getElementById("install_api_key").value = ThinkUpSettings.install_api_key;
+			document.getElementById("email_address").value = ThinkUpSettings.email_address;
+		}
+	);
 }
 
 document.addEventListener('DOMContentLoaded', restore_options);

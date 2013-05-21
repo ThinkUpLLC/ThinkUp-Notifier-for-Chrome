@@ -1,29 +1,34 @@
 function checkInsights(timecheck) {
-	var api_url = localStorage["install_url"] + "api/v1/insight.php" + "?since=" + timecheck 
-	+ "&as=" + localStorage["install_api_key"] + '&un=' + encodeURI(localStorage["email_address"]);
-	//var api_url = localStorage["install_url"] + "test.json";
-	console.log(Date() + " checking for new insights " + api_url);
+	chrome.storage.sync.get(
+		null,
+		function(ThinkUpSettings) {
+			var api_url = ThinkUpSettings.install_url + "api/v1/insight.php" + "?since=" + timecheck 
+			+ "&as=" + ThinkUpSettings.install_api_key + '&un=' + encodeURI(ThinkUpSettings.email_address);
+			//var api_url = localStorage["install_url"] + "test.json";
+			console.log(Date() + " checking for new insights " + api_url);
 
-	var xhr = new XMLHttpRequest();
-	xhr.onreadystatechange = function() {
-		if (xhr.readyState == 4) {
-			var data = JSON.parse(xhr.responseText);
-			if (typeof data.error === 'undefined') {
-				for (var i = 0; i < data.length; i++) {
-					var insight = data[i];
-					var htmlstripper = document.createElement("div");
-					htmlstripper.innerHTML = insight.text;
-					var title = insight.prefix.replace(":","");
-					var notification = window.webkitNotifications.createNotification("icon.png", title, htmlstripper.innerText);
-					notification.show();
+			var xhr = new XMLHttpRequest();
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState == 4) {
+					var data = JSON.parse(xhr.responseText);
+					if (typeof data.error === 'undefined') {
+						for (var i = 0; i < data.length; i++) {
+							var insight = data[i];
+							var htmlstripper = document.createElement("div");
+							htmlstripper.innerHTML = insight.text;
+							var title = insight.prefix.replace(":","");
+							var notification = window.webkitNotifications.createNotification("icon.png", title, htmlstripper.innerText);
+							notification.show();
+						}
+					} else {
+						console.log('Error: ' + data.error.message);
+					}
 				}
-			} else {
-				console.log('Error: ' + data.error.message);
 			}
+			xhr.open("GET", api_url, true);
+			xhr.send();
 		}
-	}
-	xhr.open("GET", api_url, true);
-	xhr.send();
+	);
 	return Math.round(+new Date() / 1000);
 }
 
