@@ -9,13 +9,20 @@ function checkInsights(timecheck) {
 		if (xhr.readyState == 4) {
 			var data = JSON.parse(xhr.responseText);
 			if (typeof data.error === 'undefined') {
-				for (var i = 0; i < data.length; i++) {
-					var insight = data[i];
-					var htmlstripper = document.createElement("div");
-					htmlstripper.innerHTML = insight.text;
-					var title = insight.prefix.replace(":","");
-					var notification = window.webkitNotifications.createNotification("icon.png", title, htmlstripper.innerText);
+				if (data.length >= 3) {
+ 					var title = "New insights available";
+					var message = "ThinkUp has " + data.length + " new insights for you.";
+					var notification = window.webkitNotifications.createNotification("icon.png", title, message);
 					notification.show();
+				} else {
+					for (var i = 0; i < data.length; i++) {
+						var insight = data[i];
+						var htmlstripper = document.createElement("div");
+						htmlstripper.innerHTML = insight.text;
+						var title = insight.prefix.replace(":","");
+						var notification = window.webkitNotifications.createNotification("icon.png", title, htmlstripper.innerText);
+						notification.show();
+					}
 				}
 			} else {
 				console.log('Error: ' + data.error.message);
